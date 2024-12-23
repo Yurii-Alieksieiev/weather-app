@@ -1,0 +1,85 @@
+<div class="forecast">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title class="forecast__title">{{ weatherDetails().name }}, {{ weatherDetails().sys.country }}: {{ weatherDetails().main.temp | temperature }}°C</mat-card-title>
+      <mat-card-subtitle class="forecast__subtitle">
+       Feels like {{ weatherDetails().main.feels_like | temperature }}°C.
+       {{ weatherDetails().weather[0].description | capitalize }}.
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="forecast__details">
+        <h2 class="forecast__details-title">Weather Details</h2>
+        <div class="forecast__details-container">
+
+          <div class="forecast__details-card">
+            <h3 class="forecast__details-card-title">Max Temperature</h3>
+            <span class="forecast__details-card-value">{{ weatherDetails().main.temp_max | temperature }}°C</span>
+          </div>
+
+          <div class="forecast__details-card">
+            <h3 class="forecast__details-card-title">Min Temperature</h3>
+            <span class="forecast__details-card-value">{{ weatherDetails().main.temp_min | temperature }}°C</span>
+          </div>
+
+          <div class="forecast__details-card">
+            <h3 class="forecast__details-card-title">Humidity</h3>
+            <span class="forecast__details-card-value">{{ weatherDetails().main.humidity }}%</span>
+          </div>
+
+          <div class="forecast__details-card">
+            <h3 class="forecast__details-card-title">Pressure</h3>
+            <span class="forecast__details-card-value">{{ weatherDetails().main.pressure }} hPa</span>
+          </div>
+
+          <div class="forecast__details-card">
+            <h3 class="forecast__details-card-title">Wind</h3>
+            <span class="forecast__details-card-value">{{ weatherDetails().wind.speed | number: '1.0-0' }} m/s</span>
+          </div>
+
+          <div class="forecast__details-card">
+            <h3 class="forecast__details-card-title">Cloudiness</h3>
+            <span class="forecast__details-card-value">{{ weatherDetails().clouds.all }}%</span>
+          </div>
+
+          <div class="forecast__details-card">
+            <h3 class="forecast__details-card-title">Sunrise</h3>
+            <span class="forecast__details-card-value">{{ timestampToDate(weatherDetails().sys.sunrise) | date: 'shortTime'  }}</span>
+          </div>
+
+          <div class="forecast__details-card">
+            <h3 class="forecast__details-card-title">Sunset</h3>
+            <span class="forecast__details-card-value">{{ timestampToDate(weatherDetails().sys.sunset) | date: 'shortTime' }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title class="forecast__title">5 Day Forecast</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="forecast__forecast-container" *ngIf="(forecast$ | async) as forecast">
+        <mat-card class="forecast__forecast-card" *ngFor="let day of forecast" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title class="forecast__title">{{ day.date | date: 'MMM d' }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="forecast__forecast-card-item" *ngFor="let item of day.items">
+              <span>{{item.dt_txt | date: 'h:mm a' }}:</span>
+              <span>Min: {{item.main.temp_min | temperature}}°C,</span>
+              <span>Max: {{item.main.temp_max | temperature}}°C.</span>
+              <span>
+                Feels like {{ item.main.feels_like | temperature }}°C.
+                {{ item.weather[0].description | capitalize }}
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+

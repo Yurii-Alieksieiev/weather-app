@@ -1,0 +1,35 @@
+<div class="autocomplete">
+  <mat-form-field class="autocomplete-input">
+    <input matInput
+           placeholder="Search a city"
+           [matAutocomplete]="auto"
+           [formControl]="searchControl"
+    >
+    <button *ngIf="searchControl.value" matSuffix mat-icon-button aria-label="Search" (click)="cleanSearch()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngIf="isLoading()" class="autocomplete__option--loading">
+      <mat-spinner diameter="20"></mat-spinner>
+    </mat-option>
+    <ng-container *ngIf="!isLoading()">
+      <ng-container *ngIf="(citiesList$ | async) as citiesList">
+        @if (citiesList) {
+          @if (citiesList.length > 0) {
+            <ng-container *ngFor="let cityInfo of citiesList; let idx = index">
+              <mat-option (onSelectionChange)="onSelectionChange(idx)" [value]="cityInfo.name">
+                <span>{{ cityInfo.name }}</span>
+                <span>{{ ', ' + cityInfo.sys.country }}</span>
+                <span>{{ ' [' + cityInfo.coord.lat + ',' + cityInfo.coord.lon + ']' }}</span>
+              </mat-option>
+            </ng-container>
+          } @else {
+            <mat-option [disabled]="true">No results</mat-option>
+          }
+        }
+      </ng-container>
+    </ng-container>
+  </mat-autocomplete>
+</div>
